@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html>
+
+
+
+<head>
+  <meta charset="utf-16">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Past Time Pairs | Character Menu</title>
+  <link rel="stylesheet" href="../src/css/MainCSS.css">
+  <link rel="icon" href="../src/media/img/Logo.png">
+</head>
+
+<main>
+<body spellcheck="false">
+<button id="music" onclick="toggleBackgroundMusic()">
+  <img id="music-icon" src="../src/media/img/webdesign/soundsymbol.png" alt="Music On">
+</button>
+<img src="../src/media/img/webdesign/CharacterSelect.jpg" alt="MainBG" id="GameFieldBG" ></img>
+<img src="../src/media/img/CharBG/generalbg.jpg" alt="FirstCharacterBG" id="FirstCharacterBG" ></img>
+<img src="../src/media/img/CharBG/knightbg.jpg" alt="SecondCharacterBG" id="SecondCharacterBG" ></img>
+<h1 id="StartHeader">Choose your Characters</h1>
+
+    <div id="NotificationCharSelect">
+    <section>
+      <p id=NotificationSentence>NOTIFICATION BABY!</p>
+    </section>
+  </div>
+
+<div class="PlayerOneInfo">
+<form name="PlayerOneForm" action="" method="GET">
+  <label id="PlayerOneUsername">Player 1: Username</label>
+  <button disabled id="hideENTER">Submit</button>
+  <input type="text" name="PlayerOneName" id="FirstUser" autocomplete="off" value="Username" maxlength="12" onfocus="this.value=null" onkeypress="return RestrictSpace()" onpaste="PreventSpace(event)"> <br>
+</form>
+<div class="PlayerOneCharacterSkin">
+<img src="../src/media/img/Logo.png" alt="CHARACTER" width="250" height="250" id="PlayerOneCharacter"></img>
+<p id="PlayerOneSelectLeft"><</p>
+<p id="PlayerOneSelectRight">></p>
+</div>
+
+<section class="CharOneInfo">
+  <h4 id="CharacterOneName">CharName</h4>
+  <p id="CharacterOneDesc">CharDescription</p>
+</section>
+</div>
+
+<div class="PlayerTwoInfo">
+<form name="PlayerTwoForm" action="" method="GET">
+  <label id="PlayerTwoUsername">Player 2: Username</label>
+  <button disabled id="hideENTER">Submit</button>
+  <input type="text" name="PlayerTwoName" id="SecondUser" autocomplete="off" value="Username" maxlength="12" onfocus="this.value=null" onkeypress="return RestrictSpace()" onpaste="PreventSpace(event)"> <br>
+</form>
+<div class="PlayerTwoCharacterSkin">
+<img src="../src/media/img/Logo.png" alt="CHARACTER" width="250" height="250" id="PlayerTwoCharacter"></img>
+<p id="PlayerTwoSelectLeft"><</p>
+<p id="PlayerTwoSelectRight">></p>
+</div>
+
+<section class="CharTwoInfo">
+  <h4 id="CharacterTwoName">CharName</h4>
+  <p id="CharacterTwoDesc">CharDescription</p>
+</section>
+</div>
+
+<img src="../src/media/img/Logo.png" alt="Logo Placeholder" width="500" height="500" id="selLogo"></img>
+
+<h2 id="StartGame" onclick="recheck()">Start Game</h2>
+
+
+<script>
+window.addEventListener('load', loadUp);
+
+var P1_LEFT, P1_RIGHT, P2_LEFT, P2_RIGHT, P1_CHARSKIN, P1_CHARNAME, P1_CHARDESC, P2_CHARSKIN, P2_CHARNAME, P2_CHARDESC, P1_CURRENTCHAR, P2_CURRENTCHAR, P1_CHARBG, P2_CHARBG, CD;
+var Sentence = document.getElementById("NotificationSentence");
+var P1_CHARID = 2;
+var P2_CHARID = 2;
+var MAXCHAR = 5;
+var MINCHAR = 0;
+
+function loadUp(){
+
+  window.ondragstart = function() { return false; } 
+  P1_LEFT = document.getElementById("PlayerOneSelectLeft");
+  P2_LEFT = document.getElementById("PlayerTwoSelectLeft");
+
+  P1_RIGHT = document.getElementById("PlayerOneSelectRight");
+  P2_RIGHT = document.getElementById("PlayerTwoSelectRight");
+
+  P1_CHARSKIN = document.getElementById("PlayerOneCharacter");
+  P2_CHARSKIN = document.getElementById("PlayerTwoCharacter");
+
+  P1_CHARNAME = document.getElementById("CharacterOneName");
+  P2_CHARNAME = document.getElementById("CharacterTwoName");
+
+  P1_CHARDESC = document.getElementById("CharacterOneDesc");
+  P2_CHARDESC = document.getElementById("CharacterTwoDesc");
+
+  P1_CHARBG = document.getElementById("FirstCharacterBG");
+  P2_CHARBG = document.getElementById("SecondCharacterBG");
+
+  P1_LEFT.addEventListener('click', CharacterSelect);
+  P2_LEFT.addEventListener('click', CharacterSelect);
+
+  P1_RIGHT.addEventListener('click', CharacterSelect);
+  P2_RIGHT.addEventListener('click', CharacterSelect);
+
+  P1_CURRENTCHAR = CHARACTER[P1_CHARID];
+  P2_CURRENTCHAR = CHARACTER[P2_CHARID];
+
+  P1_CHARSKIN.src = CHARACTER[P1_CHARID].ImageSrc;
+  P1_CHARNAME.innerHTML = CHARACTER[P1_CHARID].Name;
+  P1_CHARDESC.innerHTML = CHARACTER[P1_CHARID].Description;
+  P1_CHARBG.src = CHARACTER[P1_CHARID].CharacterBG;
+
+  P2_CHARSKIN.src = CHARACTER[P2_CHARID].ImageSrc;
+  P2_CHARNAME.innerHTML = CHARACTER[P2_CHARID].Name;
+  P2_CHARDESC.innerHTML = CHARACTER[P2_CHARID].Description;
+  P2_CHARBG.src = CHARACTER[P2_CHARID].CharacterBG;
+}
+
+const CHARACTER = [
+  SAMURAI = {
+    Name: 'Samurai',
+    ImageSrc: '../src/media/img/characters/samurai.png',
+    CharacterBG: '../src/media/img/CharBG/samuraibg.jpg',
+    Description: '<b>Healthpoints:</b> 90HP</br></br><b>Ability:</b> [<i>Zen Concentration</i>] The samurai deals 3 additional damage to his opponent for each damage pair he finds.</br><br><b>Description:</b> During the 12th to the 19th centuries, the samurai was one of the most skillful fighters in Japan, who mastered several martial arts. Known for his honor and loyalty, the samurai followed a code of honor called bushidō, which emphasized bravery, discipline, and respect for elders. The typical symbol of the samurai is his katana sword, which served as a symbol of his honor and as a tool of martial arts.'
+  },
+  GENERAL = {
+    Name: 'Generalin',
+    ImageSrc: '../src/media/img/characters/general.png',
+    CharacterBG: '../src/media/img/CharBG/generalbg.jpg',
+    Description: "<b>Healthpoints:</b> 100HP</br></br><b>Ability:</b> [<i>Tactical Move</i>] After finding 3 pairs, the General gets to have another turn</br><br><b>Description:</b> Standardized from the 17th century, the General is a high-ranking officer in an army. As an experienced leader, she commands troops and strikes strategic decisions to defeat her enemies. She is known for her high level of discipline and self-control, which helps her stay calm and level-headed in stressful situations."  },
+  INDIAN = {
+    Name: 'Indian',
+    ImageSrc: '../src/media/img/characters/indian.png',
+    CharacterBG: '../src/media/img/CharBG/indianbg.jpg',
+    Description: "<b>Healthpoints:</b> 100HP</br></br><b>Ability:</b> [<i>Divine Flora</i>] After finding 2 pairs, the Indian regenerates 5HP. This ability cannot exceed the maximum healthpoints!</br><br><b>Description:</b> Between the 1st and 16th centuries, the Indian, with her close connection to nature, was a master of traditional practices such as producing medicinal herbs and gathering food. She is also known for standing her ground on the battlefield to protect her culture, countries and communities, so she should not be underestimated."  },
+  KNIGHT = {
+    Name: 'Knight',
+    ImageSrc: '../src/media/img/characters/knight.png',
+    CharacterBG: '../src/media/img/CharBG/knightbg.jpg',
+    Description: "<b>Healthpoints:</b> 110HP</br></br><b>Ability:</b> [<i>Iron Will</i>] After finding 4 pairs, the Knight blocks his enemy's next incoming damage.</br><br><b>Description:</b> With his heyday in the 12th and 13th centuries, the knight was part of the social class of warriors and nobles. Known for his bravery and honor, as a protector of his people, he follows a strict code of honor that obliges him to be loyal and to protect his master and his people, for which he has to be very skilled in the art of battle."  },
+  PHARAOH = {
+    Name: 'Pharaoh',
+    ImageSrc: '../src/media/img/characters/pharao.png',
+    CharacterBG: '../src/media/img/CharBG/pharaobg.jpg',
+    Description: "<b>Healthpoints:</b> 100HP</br></br><b>Ability:</b> [<i>Anubis Blessing</i>] After the Pharaoh's health points are reduced to 0, she gains a second chance and regenerates 15 healthpoints.</br><br><b>Description:</b> From around 3100 BC to the 4th centuries, the pharaoh was a ruler who served as head of state and supreme religious leader of the ancient Egypt . Because of her close association with religion, she was often worshiped as a god. To demonstrate this power even in the afterlife, there were magnificent tombs built, filled with treasures and works of art."  },
+  VIKING = {
+    Name: 'Viking',
+    ImageSrc: '../src/media/img/characters/viking.png',
+    CharacterBG: '../src/media/img/CharBG/vikingbg.jpg',
+    Description: "<b>Healthpoints:</b> 120HP</br></br><b>Ability:</b> [<i>Odin's Wrath</i>] With every pair the Viking finds, he gets a 1 to 12 chance to receive a booster. </br><br><b>Description:</b> Between the 8th and 11th centuries, the Viking was a seafarer and warrior from Scandinavia.This type of warrior usually carried an ax and a shield with him, which allowed him to win battles that gave rise to numerous legends and stories that are often related to the religion of the Viking, who followed the gods of Norse mythology such as Thor, Freya and Odin."  },
+]
+
+
+function CharacterSelect(pointer){
+  /////////////////////////////////////////////////PLAYER ONE//////////////////////////////////////////////////////
+  //LEFT ARROW P1
+  if(pointer.target === P1_LEFT){
+    if(P1_CHARID !== 0){
+      P1_CHARID = P1_CHARID - 1;
+      P1_CURRENTCHAR = CHARACTER[P1_CHARID];
+      console.log(P1_CURRENTCHAR.Name)
+      console.log(P1_CHARID);
+    }
+    else if(P1_CHARID === MINCHAR){
+      P1_CHARID = MAXCHAR;
+      P1_CURRENTCHAR = CHARACTER[P1_CHARID];
+      console.log(P1_CURRENTCHAR.Name)
+      console.log(P1_CHARID);
+    }
+    P1_CHARSKIN.src = CHARACTER[P1_CHARID].ImageSrc;
+    P1_CHARNAME.innerHTML = CHARACTER[P1_CHARID].Name;
+    P1_CHARDESC.innerHTML = CHARACTER[P1_CHARID].Description;
+    P1_CHARBG.src = CHARACTER[P1_CHARID].CharacterBG;
+  }
+
+  //RIGHT ARROW P1
+  if(pointer.target === P1_RIGHT){
+      if(P1_CHARID !== MAXCHAR){
+      P1_CHARID = P1_CHARID + 1;
+      P1_CURRENTCHAR = CHARACTER[P1_CHARID];
+      console.log(P1_CURRENTCHAR.Name)
+      console.log(P1_CHARID);
+    }
+    else if(P1_CHARID === MAXCHAR){
+      P1_CHARID = MINCHAR;
+      P1_CURRENTCHAR = CHARACTER[P1_CHARID];
+      console.log(P1_CURRENTCHAR.Name)
+      console.log(P1_CHARID);
+    }
+    P1_CHARSKIN.src = CHARACTER[P1_CHARID].ImageSrc;
+    P1_CHARNAME.innerHTML = CHARACTER[P1_CHARID].Name;
+    P1_CHARDESC.innerHTML = CHARACTER[P1_CHARID].Description;
+    P1_CHARBG.src = CHARACTER[P1_CHARID].CharacterBG;
+  }
+    /////////////////////////////////////////////////PLAYER TWO//////////////////////////////////////////////////////
+    //LEFT ARROW P2
+  if(pointer.target === P2_LEFT){
+    if(P2_CHARID !== 0){
+      P2_CHARID = P2_CHARID - 1;
+      P2_CURRENTCHAR = CHARACTER[P2_CHARID];
+      console.log(P2_CURRENTCHAR.Name)
+      console.log(P2_CHARID);
+    }
+    else if(P2_CHARID === MINCHAR){
+      P2_CHARID = MAXCHAR;
+      P2_CURRENTCHAR = CHARACTER[P2_CHARID];
+      console.log(P2_CURRENTCHAR.Name)
+      console.log(P2_CHARID);
+    }
+    P2_CHARSKIN.src = CHARACTER[P2_CHARID].ImageSrc;
+    P2_CHARNAME.innerHTML = CHARACTER[P2_CHARID].Name;
+    P2_CHARDESC.innerHTML = CHARACTER[P2_CHARID].Description;
+    P2_CHARBG.src = CHARACTER[P2_CHARID].CharacterBG;
+  }
+
+    //RIGHT ARROW P2
+  if(pointer.target === P2_RIGHT){
+      if(P2_CHARID !== MAXCHAR){
+      P2_CHARID = P2_CHARID + 1;
+      P2_CURRENTCHAR = CHARACTER[P2_CHARID];
+      console.log(P2_CURRENTCHAR.Name)
+      console.log(P2_CHARID);
+    }
+    else if(P2_CHARID === MAXCHAR){
+      P2_CHARID = MINCHAR;
+      P2_CURRENTCHAR = CHARACTER[P2_CHARID];
+      console.log(P2_CURRENTCHAR.Name)
+      console.log(P2_CHARID);
+    }
+    P2_CHARSKIN.src = CHARACTER[P2_CHARID].ImageSrc;
+    P2_CHARNAME.innerHTML = CHARACTER[P2_CHARID].Name;
+    P2_CHARDESC.innerHTML = CHARACTER[P2_CHARID].Description;
+    P2_CHARBG.src = CHARACTER[P2_CHARID].CharacterBG;
+  }
+}
+
+
+setInterval(function Username(){
+  var PlayerOne = document.getElementById("FirstUser").value;
+  var PlayerTwo = document.getElementById("SecondUser").value;
+  var P1Name = document.getElementById("PlayerOneUsername")
+  var P2Name = document.getElementById("PlayerTwoUsername")
+
+  if(PlayerOne !== ""){
+    console.log(PlayerOne);
+    P1Name.innerHTML = ("Player 1: " + PlayerOne);
+  }
+  if(PlayerTwo !== ""){
+  P2Name.innerHTML = ("Player 2: " + PlayerTwo)
+}
+}, 1000);
+
+function recheck(){
+  if(CD) return;
+  CD = true;
+  setTimeout(() => {CD = false;}, 2000);
+  var PlayerOne = document.getElementById("FirstUser").value;
+  var PlayerTwo = document.getElementById("SecondUser").value;
+  var P1Name = document.getElementById("PlayerOneUsername")
+  var P2Name = document.getElementById("PlayerTwoUsername")
+
+  if(PlayerOne !== "" && PlayerTwo !== "" && PlayerOne !== "Username" && PlayerTwo !== "Username" && PlayerOne !== PlayerTwo && PlayerTwo !== PlayerOne){
+  console.log(PlayerOne + "|" + PlayerTwo);
+  sessionStorage.setItem('Player One', PlayerOne);
+  sessionStorage.setItem('Player Two', PlayerTwo);
+  sessionStorage.setItem('First Character', P1_CHARSKIN.src);
+  sessionStorage.setItem('Second Character', P2_CHARSKIN.src);
+  sessionStorage.setItem('First Class', P1_CHARNAME.innerHTML);
+  sessionStorage.setItem('Second Class', P2_CHARNAME.innerHTML);
+  document.querySelectorAll('*').forEach(function(node) {
+    node.style.animation = 'none';
+    node.style.animation = 'joinDisappear 2s ease forwards'
+    });
+    setTimeout(() => {
+    location.href = "./GamePage.html";
+  }, 500);
+}
+if(PlayerOne === "" && PlayerTwo !== ""){
+  document.getElementById("SecondUser").style.animation = 'none';
+  document.getElementById("FirstUser").style.animation ='alertOne 1s ease-in-out alternate infinite none';
+  NotificationSentence.innerHTML = ("Username for player one can't be found.");
+  NOTIFICATION();
+  P1Name.innerHTML = ("Player 1: " + "INVALID");
+}
+if(PlayerTwo === "" && PlayerOne !== ""){
+  document.getElementById("FirstUser").style.animation ='none';
+  document.getElementById("SecondUser").style.animation ='alertTwo 1s ease-in-out alternate infinite none';
+  NotificationSentence.innerHTML = ("Username for player two can't be found.");
+  NOTIFICATION();
+  P2Name.innerHTML = ("Player 2: " + "INVALID");
+}
+if(PlayerOne === "Username" || PlayerTwo === "Username"){
+  NotificationSentence.innerHTML = ("Player name can't be 'Username'");
+  NOTIFICATION();
+}
+if(PlayerTwo === "" && PlayerOne === ""){
+  document.getElementById("FirstUser").style.animation ='none';
+  document.getElementById("SecondUser").style.animation = 'none';
+  NotificationSentence.innerHTML = ("Usernames for both players are missing.");
+  NOTIFICATION();
+  P1Name.innerHTML = ("Player 1: " + "INVALID");
+  P2Name.innerHTML = ("Player 2: " + "INVALID");
+
+  setTimeout(function AnimatePlay(){
+  document.getElementById("FirstUser").style.animation ='alertOne 1s ease-in-out alternate infinite none';
+  document.getElementById("SecondUser").style.animation ='alertTwo 1s ease-in-out alternate infinite none';
+}, 100)
+}
+
+if(PlayerTwo === PlayerOne && PlayerOne === PlayerTwo && PlayerOne != "" || PlayerTwo === PlayerOne && PlayerOne === PlayerTwo && PlayerTwo != ""){
+  NotificationSentence.innerHTML = ("Player name can't be the same.");
+  NOTIFICATION();
+}
+}
+
+function RestrictSpace() {
+  if (event.keyCode == 32) {
+    return false;
+  }
+}
+
+function PreventSpace(event) {
+  var data = event.clipboardData.getData("text/plain");
+  var isNullOrContainsWhitespace = (!data || data.length === 0 || /\s/g.test(data));
+  if (isNullOrContainsWhitespace) {
+    event.preventDefault();
+  }
+}
+
+  function NOTIFICATION(){
+    let NotificationWindow = document.getElementById("NotificationCharSelect");
+    NotificationWindow.styl
+    NotificationWindow.style.opacity = 0;
+    NotificationWindow.style.display = "block";
+    NotificationWindow.style.animation = "ShortNotif 1.5s ease-in-out"
+
+    setTimeout(()=>{
+      NotificationWindow.style.display = "none";
+    }, 1500)    
+  }
+
+  var audio = new Audio();
+audio.src = '../PossibleAudio/T2.wav';
+audio.volume="0.5";
+audio.loop = true;
+
+function toggleBackgroundMusic() {
+  var musicButton = document.getElementById("music");
+  var musicIcon = document.getElementById("music-icon");
+
+  if (audio.paused) {
+    audio.play();
+    musicIcon.src = "../src/media/img/webdesign/mutedsymbol.png";
+    musicButton.setAttribute("aria-label", "Disable background music");
+    musicButton.setAttribute("title", "Pause");
+  } else {
+    audio.pause();
+    musicIcon.src = "../src/media/img/webdesign/soundsymbol.png";
+    musicButton.setAttribute("aria-label", "Enable background music");
+    musicButton.setAttribute("title", "Play");
+  }
+}
+
+var musicButton = document.getElementById("music");
+musicButton.addEventListener("mouseover", function() {
+  var musicIcon = document.getElementById("music-icon");
+
+  if (audio.paused) {
+    musicButton.setAttribute("title", "Play");
+  } else {
+    musicButton.setAttribute("title", "Pause");
+  }
+});
+
+musicButton.addEventListener("mouseout", function() {
+  var musicIcon = document.getElementById("music-icon");
+
+  if (audio.paused) {
+    musicButton.setAttribute("title", "Enable background music");
+  } else {
+    musicButton.setAttribute("title", "Disable background music");
+  }
+});
+</script>
+
+
+</body>
+</main>
+</html>

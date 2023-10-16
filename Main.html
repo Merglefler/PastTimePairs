@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-16">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Past Time Pairs | Main Menu</title>
+  <link rel="stylesheet" href="./src/css/MainCSS.css">
+  <link rel="icon" href="./src/media/img/Logo.png">
+</head>
+
+<main>
+<body>
+
+  <button id="music" onclick="toggleBackgroundMusic()">
+    <img id="music-icon" src="./src/media/img/webdesign/soundsymbol.png" alt="Music On">
+  </button>
+  
+<div class="IMAGES">
+    <img src="./src/media/img/Logo.png" alt="Logo Placeholder" width="401" height="401" id="mainLogo" onclick="JOIN()"></img>
+    <img src="./src/media/img/webdesign/MainBG.jpg" alt="MainBG" id="GameFieldBG" ></img>
+
+</div>
+
+<h1 id="JoinGameButton" onclick="JOIN()">PRESS TO JOIN GAME</h1>
+<h1 id="SecondJoinGameButton" onclick="JOIN()"></h1>
+
+
+<section class="MainDescription">
+  <button type="button" id="DescCollapsible">Description</button>
+  <div class="Content">
+    <h2 id=CloseDescButton>X</h2>
+    <section id=InContent>
+      <h1>Game Description</h1>
+      <p>Welcome to our memory game that will take you on a journey through different eras!</p>
+      <p>In this game you will not only have fun and train your memory, but also expand your knowledge of history.
+        From antiquity to the present day, you will explore historical events, important personalities and cultural developments from different eras.
+        Be inspired by our game and discover the fascinating world of history!</p>
+      <p>This project was made during the project weeks at the SRH Heidelberg with the task of creating a turn-based card game for 2 players.
+        The game is a tactical and in-depth version of the traditional board game "Memory".</p>
+
+    </section>
+  </div>
+</section>
+
+<section class="Rules">
+  <button type="button" id="RuleCollapsible">Rules</button>
+  <div class="Content">
+    <h2 id=CloseRulesButton>X</h2>
+    <section id=InContent>
+      <h1>RULES</h1>
+      <p>At the start of the game, both players must enter their names and choose a character from an expanding roster.
+        These characters have different effects and bonuses that allow you to play the game in different ways. 
+
+      <p>After both players have made their choice, the game begins.
+        Both players start with a fixed number of life points, which can vary depending on which character you choose.
+        One after the other, the players each select 2 cards on the playing field that have been shuffled and reveal them until one player has found a pair.
+      <p>These cards consist of 26 regular cards and 4 special cards.
+        The regular cards come in two types:
+
+        <ul><span style="color: #ff0000">Offensive Cards (RED)</span>: 
+          If two identical offensive cards are revealed, the value that is displayed in the middle of the card is subtracted from the other player's life points as damage.<br><br>
+        <span style="color: #00ff00">Defensive Cards (GREEN)</span>: 
+        If two identical defensive cards are revealed, the value that is displayed in the middle of the card is added to your life points.
+         The maximum healthpoints cannot be exceeded, so any health regenerated above that will be dealt as damage to the enemy instead.</ul>
+         <p>There are also two different types of cards of special cards:
+
+          <ul><span style="color: #FFA500">Booster (ORANGE)</span>:
+          Revealing a single booster card during a turn grants the player a x2 multiplier, which only lasts until the next pair is revealed.
+          This booster only applies to the player who revealed it.
+          If that player finds a pair, the value of the revealed card is doubled.
+          If a player uncovered multiple boosters before finding a pair, the effect of the boosters get stacked. (x2 -> x4 -> x8 -> x16)<br><br>
+ 
+          <b>Caution!</b> If player A has an active booster and player B finds a pair first, the effect of the booster for player A is negated and the booster is used up.<br><br>
+ 
+          <span style="color: #A020F0">Traps (PURPLE)</span>:
+          Revealing a Trap Card during a turn grants the player a x0.5 multiplier, which lasts until the next pair is revealed by the same player.
+          This trap applies only to the player who uncovered it.
+          If that player now reveals a pair, the value of the revealed card is halved.
+          If a player uncovered multiple traps before finding a pair, the effect of the traps are stacked. (x0.5 -> x0.25)</ul>
+ 
+          <p>According to this principle, the game is played until one player has reduced his opponent's life points to 0 and thus emerges as the winner.
+ 
+          If all the cards on the field have already been revealed before a player loses, the cards are reshuffled and game continues until a winner is determined.
+    </section>
+  </div>
+</section>
+
+<script>
+window.ondragstart = function() { return false; } 
+var Rules = document.getElementById("RuleCollapsible");
+var CloseRulesButton = document.getElementById("CloseRulesButton");
+var GameDescription = document.getElementById("DescCollapsible");
+var CloseDescButton = document.getElementById('CloseDescButton');
+var RulesContent;
+var GameDescContent;
+
+CloseRulesButton.addEventListener("click", CloseRule);
+Rules.addEventListener("click", CloseRule);
+GameDescription.addEventListener("click", CloseDesc);
+CloseDescButton.addEventListener("click", CloseDesc);
+
+function CloseRule() {
+    Rules.classList.toggle("active");
+    RulesContent = Rules.nextElementSibling;
+    RulesContent.classList.toggle("active");
+    console.log(RulesContent.classList);
+    if(GameDescContent && GameDescContent.style.display === "flex"){
+    GameDescContent.style.animation = "disappear 0.5s linear forwards";
+    setTimeout(function setNone(){
+      GameDescContent.style.display = "none";
+      GameDescription.classList.toggle("active");
+    }, 500)
+    }
+    setTimeout(function () {
+    if (RulesContent.style.display === "flex") {
+    RulesContent.style.animation = "disappear 0.5s linear forwards";
+    setTimeout(function setNone(){
+      RulesContent.style.display = "none";
+    }, 500)
+    } else {
+      RulesContent.style.animation = "appear 0.5s linear forwards";
+      RulesContent.style.display = "flex";
+    }
+  }, 500)
+  }
+
+function CloseDesc(){
+    GameDescription.classList.toggle("active");
+    GameDescContent = GameDescription.nextElementSibling;
+    GameDescContent.classList.toggle("active");
+    console.log(GameDescContent.classList);
+    if(RulesContent && RulesContent.style.display === "flex"){
+    RulesContent.style.animation = "disappear 0.5s linear forwards";
+    RulesContent.classList.toggle("active");
+    setTimeout(function setNone(){
+      RulesContent.style.display = "none";
+      Rules.classList.toggle("active");
+    }, 500)
+    }
+    setTimeout(function (){
+    if (GameDescContent.style.display === "flex") {
+    GameDescContent.style.animation = "disappear 0.5s linear forwards";
+    setTimeout(function setNone(){
+      GameDescContent.style.display = "none";
+    }, 500)
+    } else {
+      GameDescContent.style.animation = "appear 0.5s linear forwards";
+      GameDescContent.style.display = "flex";
+    }
+  }, 500)
+  }
+
+
+  function JOIN(){
+    document.querySelectorAll('*').forEach(function(node) {
+    node.style.animation = 'none';
+    node.style.animation = 'joinDisappear 2s ease forwards'
+    });
+    setTimeout(() => {
+    location.href = "./webpages/StartPage.html";
+  }, 500);
+  }
+
+var audio = new Audio();
+  audio.src = './PossibleAudio/Game2.wav';
+  audio.volume="0.5";
+  audio.loop = true;
+
+function toggleBackgroundMusic() {
+  var musicButton = document.getElementById("music");
+  var musicIcon = document.getElementById("music-icon");
+
+  if (audio.paused) {
+    audio.play();
+    musicIcon.src = "./src/media/img/webdesign/mutedsymbol.png";
+    musicButton.setAttribute("aria-label", "Disable background music");
+    musicButton.setAttribute("title", "Pause");
+  } else {
+    audio.pause();
+    musicIcon.src = "./src/media/img/webdesign/soundsymbol.png";
+    musicButton.setAttribute("aria-label", "Enable background music");
+    musicButton.setAttribute("title", "Play");
+  }
+}
+
+var musicButton = document.getElementById("music");
+musicButton.addEventListener("mouseover", function() {
+  var musicIcon = document.getElementById("music-icon");
+
+  if (audio.paused) {
+    musicButton.setAttribute("title", "Play");
+  } else {
+    musicButton.setAttribute("title", "Pause");
+  }
+});
+
+musicButton.addEventListener("mouseout", function() {
+  var musicIcon = document.getElementById("music-icon");
+
+  if (audio.paused) {
+    musicButton.setAttribute("title", "Enable background music");
+  } else {
+    musicButton.setAttribute("title", "Disable background music");
+  }
+});
+
+
+</script>
+
+</body>
+</main>
+</html>

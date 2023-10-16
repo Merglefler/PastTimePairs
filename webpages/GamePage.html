@@ -1,0 +1,1342 @@
+<!DOCTYPE html>
+<html>
+
+
+
+<head>
+  <meta charset="utf-16">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, scalable=yes">
+  <title>Past Time Pairs | Game</title>
+  <link rel="stylesheet" href="../src/css/MainCSS.css">
+  <link rel="icon" href="../src/media/img/Logo.png">
+</head>
+
+<main>
+<body>
+
+<audio id="audio" src="../PossibleAudio/Songs/FF7.mp3"></audio>
+
+  <div id="controls">
+    <div class="audio-track"><div class="time"></div></div>
+    <button class="play">▷</button>
+    <button class="pause">II</button>
+    <button class="prev">|◁ </button>
+    <button class="next"> ▷|</button>
+    <input type="range" class="volume" min="0" max="1" step="0.01" value="1">
+ 
+ </div> 
+
+
+  <div id="Notification">
+    <section id=InNotification>
+      <p id=NotificationText>NOTIFICATION BABY!</p>
+    </section>
+    <h2 id=MainMenu onclick="JOIN()">Main Menu</h2>
+    <h2 id=Continue onclick="CONTINUE()">Continue</h2>
+  </div>
+
+    <div id="NotificationTwo">
+    <section id=InNotificationTwo>
+      <p id=NotificationTextTwo>NOTIFICATION BABY!</p>
+    </section>
+  </div>
+
+<div class="IMAGES">
+    <img src="../src/media/img/Logo.png" alt="Logo Placeholder" id="GameLogo" onclick="JOIN()"></img>
+    <img src="../src/media/img/webdesign/Playfield.jpg" alt="GameFieldBG" id="GameFieldBG"></img>
+</div>
+
+
+<section>
+  <section>
+    <div class="GamePlayerOne">
+        <img src="" alt="Character Placeholder" width="150" height="150" id="GameCharacterOne"></img>
+        <p id="GameFirstName">PLAYER 1</p>
+          <div class="HealthFieldOne">
+          <p id="GameFirstHealth">100</p>
+          </div>
+        <p id="GameFirstScore">SCORE: 0</p>
+        <img src="" alt="BoosterHolder" width="50" height="50" id="BoostOne" title="The value of the next pair will be doubled"></img>
+        <img src="" alt="TrapHolder" width="50" height="50" id="TrapOne" title="The value of the next pair are halved"></img>
+        <img src="../src/media/img/webdesign/firesymbol.gif" alt="EffectHolder" width="50" height="50" id="EffectOne"></img>
+    </div>
+  </section>
+
+
+  <section>
+    <div class="GamePlayerTwo">
+        <img src="" alt="Character Placeholder" width="150" height="150" id="GameCharacterTwo"></img>
+        <p id="GameSecondName">PLAYER 2</p>
+          <div class="HealthFieldTwo">
+          <p id="GameSecondHealth">100</p>
+          </div>
+        <p id="GameSecondScore">SCORE: 0</p>
+        <img src="" alt="BoosterHolder" width="50" height="50" id="BoostTwo" title="The value of the next pair will be doubled"></img>
+        <img src="" alt="TrapHolder" width="50" height="50" id="TrapTwo" title="The value of the next pair are halved"></img>
+        <img src="../src/media/img/webdesign/firesymbol.gif" alt="EffectHolder" width="50" height="50" id="EffectTwo"></img>
+    </div>
+  </section>
+</section>
+
+  <section id="GameArea">
+    
+  </section>
+
+  <section id="PlayerTurns">
+    <p id=P1Turn>PLAYER 1</p>
+    <p id=P2Turn>PLAYER 2</p>
+  </section>
+
+
+<script>
+
+window.addEventListener('load', StartUp);
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  var PN1 = sessionStorage.getItem('Player One');
+  var PN2 = sessionStorage.getItem('Player Two');
+  var PN1Char = sessionStorage.getItem('First Character');
+  var PN2Char = sessionStorage.getItem('Second Character');
+  var P1Name = document.getElementById("GameFirstName");
+  var P2Name = document.getElementById("GameSecondName");
+  var P1MaxHP, P2MaxHP;
+  var Sentence = document.getElementById("NotificationText");
+  var SentenceTwo = document.getElementById("NotificationTextTwo");
+  var MainMenuButton = document.getElementById("MainMenu");
+  var ContinueButton = document.getElementById("Continue");
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  var PLAYERONE = {
+    MaxHealth: 0,
+    Health: 100,
+    Multiplier: false,
+    Divisor: false,
+    mAmount: 0,
+    dAmount: 0,
+    berserk: 0, 
+    dmgAmount: 0,
+    Score: 0,
+    Class: '',
+    Pairs: 0,
+    Blocking: false,
+    Resurrection: 0,
+    ResurrectableClass: false
+  }
+
+  var PLAYERTWO = {
+    MaxHealth: 0,
+    Health: 100,
+    Multiplier: false,
+    Divisor: false,
+    mAmount: 0,
+    dAmount: 0,
+    berserk: 0,
+    dmgAmount: 0,
+    Score: 0,
+    Class: '',
+    Pairs: 0,
+    Blocking: false,
+    Resurrection: 0,
+    ResurrectableClass: false
+  }
+  const res = new Audio('../PossibleAudio/Revivemaybe.mp3');
+
+  const BOOSTER = [
+    DOUBLEDMG = {
+      Name: 'Double',
+      ImageSrc: '../src/media/img/cards/boost.jpg',
+      Type: 'Boost',
+      Value: 2
+    },
+    DOUBLEDMG = {
+      Name: 'Double',
+      ImageSrc: '../src/media/img/cards/boost.jpg',
+      Type: 'Boost',
+      Value: 2
+    },
+  ]
+    const trap = new Audio('../PossibleAudio/Trap.wav');
+    const boost = new Audio('../PossibleAudio/Booster.wav');
+
+  const TRAPPER = [
+    HALFDMG = {
+      Name: 'Half',
+      ImageSrc: '../src/media/img/cards/trap.jpg',
+      Type: 'Trap',
+      Value: 2
+    },
+    HALFDMG = {
+      Name: 'Half',
+      ImageSrc: '../src/media/img//cards/trap.jpg',
+      Type: 'Trap',
+      Value: 2
+    },
+  ]
+
+  const NORMAL = [
+    AXT = {
+      Name: 'Axe',
+      ImageSrc: '../src/media/img/cards/dmg/axe.jpg',
+      Type: 'Damage',
+      Value: 10
+    },
+    BOW = {
+      Name: 'Bow',
+      ImageSrc: '../src/media/img/cards/dmg/bow.jpg',
+      Type: 'Damage',
+      Value: 10
+    },  
+    DAGGER = {
+      Name: 'Dagger',
+      ImageSrc: '../src/media/img/cards/dmg/dagger.jpg',
+      Type: 'Damage',
+      Value: 6
+    },  
+    GRENADE = {
+      Name: 'Grenade',
+      ImageSrc: '../src/media/img/cards/dmg/grenade.jpg',
+      Type: 'Damage',
+      Value: 16
+    },  
+    KATANA = {
+      Name: 'Katana',
+      ImageSrc: '../src/media/img/cards/dmg/katana.jpg',
+      Type: 'Damage',
+      Value: 12
+    },  
+      SCEPTER = {
+      Name: 'Scepter',
+      ImageSrc: '../src/media/img/cards/dmg/scepter.jpg',
+      Type: 'Damage',
+      Value: 4
+    },  
+    SPEAR = {
+      Name: 'Spear',
+      ImageSrc: '../src/media/img/cards/dmg/spear.jpg',
+      Type: 'Damage',
+      Value: 8
+    },  
+    SWORD = {
+      Name: 'Sword',
+      ImageSrc: '../src/media/img/cards/dmg/sword.jpg',
+      Type: 'Damage',
+      Value: 12
+    },  
+    GUN = {
+      Name: 'Gun',
+      ImageSrc: '../src/media/img/cards/dmg/gun.jpg',
+      Type: 'Damage',
+      Value: 14
+    },  
+        
+    BEER = {
+      Name: 'Beer',
+      ImageSrc: '../src/media/img/cards/heal/beer.jpg',
+      Type: 'Heal',
+      Value: 16
+    },
+    FIRSTAID = {
+      Name: 'FirstAid',
+      ImageSrc: '../src/media/img/cards/heal/first_aid.jpg',
+      Type: 'Heal',
+      Value: 20
+    },
+    HERB = {
+      Name: 'Herb',
+      ImageSrc: '../src/media/img/cards/heal/herb.jpg',
+      Type: 'Heal',
+      Value: 16
+    },
+    SHIELD = {
+      Name: 'Shield',
+      ImageSrc: '../src/media/img/cards/heal/shield.jpg',
+      Type: 'Heal',
+      Value: 10
+    },
+
+]
+
+/*
+Cards - 40 ALL IN ALL, 4 DAVON sind booster (Kein paar), 2 Fall Karten (Kein paar), 34 Normale Karten (17 Pair)
+ROUND - TURN BASED SYSTEM, PLAYER ONE STARTS FIRST
+  Character Border lights up on turn, + size effect short notice of player turn
+    if Player, turn = true and pair = true, do type and value, if value = dmg, target enemy, else target flipper.
+
+  CardType = Card.
+
+START OF GAME - ALL CARDS ARE SHOWN, They will then be covered then shuffled.
+
+END GAME - When one of the player health <= 0
+*/
+var Turn, Pair, Target, FirstCard, SecondCard, CardValue, CardType, ChosenCard, CD, CDWait, CardFind, SavedFirst, SavedSecond;
+FirstCard = undefined;
+CD = false;
+CDWait = false;
+
+function RemoveCardClick(){
+  for(let Images of GameField.children){
+    Images.removeEventListener('click', FlipCard); //REMOVE CLICK FOR ALL (NOTES: This is for the end of round.)
+    Images.style.cursor = "default";
+    Images.style.setProperty('--ga-scaling', '1');
+    document.getElementById("GameCharacterOne").style.animation = 'none';
+    //document.getElementById("P1Turn").style.animation = 'none';
+    document.getElementById("GameCharacterTwo").style.animation = 'none';
+    //document.getElementById("P2Turn").style.animation = 'none';
+  }
+}
+
+function PlayerCheck(){
+  let BoostOne = document.getElementById("BoostOne");
+  let BoostTwo = document.getElementById("BoostTwo");
+  let TrapOne = document.getElementById("TrapOne");
+  let TrapTwo = document.getElementById("TrapTwo");
+  if(PLAYERONE.mAmount === 0){
+    PLAYERONE.Multiplier = false;
+    BoostOne.style.display = "none";
+    console.log("FIRE");
+  }
+  if(PLAYERONE.mAmount === 2){
+    PLAYERONE.Multiplier = true;
+    BoostOne.style.display = "block";
+    BoostOne.src = '../src/media/img/webdesign/BoostSymbol2.png';
+  }
+  if(PLAYERONE.mAmount === 4){
+    PLAYERONE.Multiplier = true;
+    BoostOne.style.display = "block";
+    BoostOne.src = '../src/media/img/webdesign/BoostSymbol4.png';
+  }
+  if(PLAYERONE.dAmount === 0){
+    PLAYERONE.Divisor = false;
+    TrapOne.style.display = "none";
+  }
+  if(PLAYERONE.dAmount === 2){
+    PLAYERONE.Divisor = true;
+    TrapOne.style.display = "block";
+    TrapOne.src = '../src/media/img/webdesign/TrapSymbol05.png';
+  }
+  if(PLAYERONE.dAmount === 4){
+    PLAYERONE.Divisor = true;
+    TrapOne.style.display = "block";
+    TrapOne.src = '../src/media/img/webdesign/TrapSymbol025.png';
+  }
+
+  if(PLAYERTWO.mAmount === 0){
+    PLAYERTWO.Multiplier = false;
+    BoostTwo.style.display = 'none';
+  }
+  if(PLAYERTWO.mAmount === 2){
+    PLAYERTWO.Multiplier = true;
+    BoostTwo.style.display = 'block';
+    BoostTwo.src = '../src/media/img/webdesign/BoostSymbol2.png';
+  }
+  if(PLAYERTWO.mAmount === 4){
+    PLAYERTWO.Multiplier = true;
+    BoostTwo.style.display = 'block';
+    BoostTwo.src = '../src/media/img/webdesign/BoostSymbol4.png';
+  }
+  if(PLAYERTWO.dAmount === 0){
+    PLAYERTWO.Divisor = false;
+    TrapTwo.style.display = 'none';
+  }
+  if(PLAYERTWO.dAmount === 2){
+    PLAYERTWO.Divisor = true;
+    TrapTwo.style.display = 'block';
+    TrapTwo.src = '../src/media/img/webdesign/TrapSymbol05.png';
+  }
+  if(PLAYERTWO.dAmount === 4){
+    PLAYERTWO.Divisor = true;
+    TrapTwo.style.display = 'block';
+    TrapTwo.src = '../src/media/img/webdesign/TrapSymbol025.png';
+  }
+
+  if(PLAYERONE.mAmount <= 0){
+    PLAYERONE.mAmount = 0;
+  }
+  if(PLAYERONE.dAmount <= 0){
+    PLAYERONE.dAmount = 0;
+  }
+  if(PLAYERTWO.mAmount <= 0){
+    PLAYERTWO.mAmount = 0;
+  }
+  if(PLAYERTWO.dAmount <= 0){
+    PLAYERTWO.dAmount = 0;
+  }
+}
+
+function CheckState(){
+  let P1HP = document.getElementById("GameFirstHealth");
+  let P2HP = document.getElementById("GameSecondHealth");
+
+
+  if(CardFound === CardID){
+    GameField.style.animation = 'CardAppearance 2.5s ease reverse';
+    RemoveCardClick();
+    setTimeout(CardDoubler, 2500)
+  }
+
+    if(PLAYERONE.Health <= 0 && PLAYERONE.Resurrection === 0 || PLAYERTWO.Health <= 0 && PLAYERTWO.Resurrection === 0){
+      if(PLAYERONE.Health <= 0){
+      RemoveCardClick();
+      PLAYERTWO.Score = PLAYERTWO.Score + 1;
+      document.getElementById("GameSecondScore").innerHTML = "SCORE: " + PLAYERTWO.Score;
+      GameField.style.animation = 'CardAppearance 2s ease reverse';
+    }
+      if(PLAYERTWO.Health <= 0){
+      RemoveCardClick();
+      PLAYERONE.Score = PLAYERONE.Score + 1;
+      document.getElementById("GameFirstScore").innerHTML = "SCORE: " + PLAYERONE.Score;
+      GameField.style.animation = 'CardAppearance 2s ease reverse';
+    }
+    setTimeout(function ResDelay(){
+    if(PLAYERONE.Health <= 0){
+    Sentence.innerHTML = PN2 + " has won the game.";
+    GameField.innerHTML="";
+    PLAYERONE.Health = PLAYERONE.MaxHealth;
+    PLAYERTWO.Health = PLAYERTWO.MaxHealth;
+    PLAYERONE.mAmount = 0;
+    PLAYERONE.dAmount = 0;
+    PLAYERTWO.mAmount = 0;
+    PLAYERTWO.dAmount = 0;
+    PLAYERONE.Pairs = 0;
+    PLAYERTWO.Pairs = 0;
+    PLAYERONE.Blocking = false;
+    PLAYERTWO.Blocking = false;
+
+    }
+    else{
+    Sentence.innerHTML = PN1 + " has won the game.";
+    console.log(Sentence);
+    GameField.innerHTML="";
+    PLAYERONE.Health = PLAYERONE.MaxHealth;
+    PLAYERTWO.Health = PLAYERTWO.MaxHealth;
+    PLAYERONE.mAmount = 0;
+    PLAYERONE.dAmount = 0;
+    PLAYERTWO.mAmount = 0;
+    PLAYERTWO.dAmount = 0;
+    PLAYERONE.Pairs = 0;
+    PLAYERTWO.Pairs = 0;
+    PLAYERONE.Blocking = false;
+    PLAYERTWO.Blocking = false;
+    }
+    setTimeout(NOTIFICATION, 2000);
+    },2000);
+  }
+
+  if(PLAYERONE.Health <= 0 && PLAYERONE.Resurrection === 0){
+  P1HP.innerText = 0;
+  P1HP.style.width = 1 + "%";
+
+  }else if(PLAYERTWO.Health <= 0 && PLAYERTWO.Resurrection === 0){
+    P2HP.innerText = 0;
+    P2HP.style.width = 1 + "%";
+
+  }else if(PLAYERONE.Health <= 0 && PLAYERONE.Resurrection === 1){
+    res.play();
+    PLAYERONE.Health = 15;
+    PLAYERONE.Resurrection = 0;
+    EffectOne.style.display = 'block'
+    EffectOne.title = 'The Pharaoh has been resurrected!';
+
+      P1HP.innerText = PLAYERONE.Health;
+      P2HP.innerText = PLAYERTWO.Health;
+      P1HP.style.width = PLAYERONE.Health + "%";
+      P2HP.style.width = PLAYERTWO.Health + "%";
+
+      SentenceTwo.innerHTML = PN1 + " revived back to life!";
+
+      STATUSNOTIFICATION();
+
+  }else if(PLAYERTWO.Health <= 0 && PLAYERTWO.Resurrection === 1){
+    res.play();
+    PLAYERTWO.Health = 15;
+    PLAYERTWO.Resurrection = 0;
+    EffectTwo.style.display = 'block'
+    EffectTwo.title = 'The Pharaoh has been resurrected!';
+
+      P1HP.innerText = PLAYERONE.Health;
+      P2HP.innerText = PLAYERTWO.Health;
+      P1HP.style.width = PLAYERONE.Health + "%";
+      P2HP.style.width = PLAYERTWO.Health + "%";
+
+      SentenceTwo.innerHTML = PN2 + " revived back to life!";
+      STATUSNOTIFICATION();
+  }
+  else{
+  P1HP.innerText = PLAYERONE.Health;
+  P2HP.innerText = PLAYERTWO.Health;
+  P1HP.style.width = PLAYERONE.Health + "%";
+  P2HP.style.width = PLAYERTWO.Health + "%";
+}
+}
+
+function FlipCard(Card){
+  if(CD) return;
+  CD = true;
+  GameField.style.setProperty('--ga-cursor', 'default');
+  GameField.style.setProperty('--ga-scaling', '1');
+  setTimeout(() => {CD = false; GameField.style.setProperty('--ga-scaling', '1.1'); GameField.style.setProperty('--ga-cursor', 'pointer');}, 1000);
+
+  CardFind = ValidCards[Card.target.id];
+
+  console.log(CardFind);
+
+  //
+  //Boost
+  //
+if(CardFind.Type === 'Boost'){
+  boost.play();
+    if(Turn === PN1){
+      PlayerCheck();
+      if(PLAYERONE.Multiplier === true && PLAYERONE.mAmount === 2){
+        PLAYERONE.mAmount = PLAYERONE.mAmount + CardFind.Value;
+      }
+      if(PLAYERONE.Divisor === true){
+      PLAYERONE.dAmount = PLAYERONE.dAmount - CardFind.Value;
+      console.log("BOOSTING");
+      console.log(PLAYERONE.dAmount);
+      }
+      if(PLAYERONE.Multiplier === false && PLAYERONE.Divisor !== true){
+      PLAYERONE.Multiplier = true;
+      PLAYERONE.mAmount = CardFind.Value;
+      console.log("BOOSTING");
+      console.log(PLAYERONE.mAmount);
+    }
+    PlayerCheck();
+  }
+    else if(Turn === PN2){
+      PlayerCheck();
+      if(PLAYERTWO.Multiplier === true && PLAYERTWO.mAmount === 2){
+        PLAYERTWO.mAmount = PLAYERTWO.mAmount + CardFind.Value;
+        console.log("BOOSTING");
+        console.log(PLAYERTWO.mAmount);
+      }
+      if(PLAYERTWO.Divisor === true){
+      PLAYERTWO.dAmount = PLAYERTWO.dAmount - CardFind.Value;
+      console.log("BOOSTING");
+      console.log(PLAYERTWO.dAmount);
+      }
+      if(PLAYERTWO.Multiplier === false && PLAYERTWO.Divisor !== true){
+      PLAYERTWO.Multiplier = true;
+      PLAYERTWO.mAmount = CardFind.Value;
+      console.log("BOOSTING");
+      console.log(PLAYERTWO.mAmount);
+    }
+    PlayerCheck();
+  }
+  PlayerCheck();
+  CardFound++;
+  console.log("Card Found: " + CardFound);
+  CheckState();
+  Card.target.style.animation = 'none';
+  Card.target.src = CardFind.ImageSrc;
+  Card.target.removeEventListener('click', FlipCard); //REMOVE CLICK
+
+  Card.target.classList.toggle("active");
+  Card.target.style.animation = 'Flipping 1s ease forwards';
+  setTimeout(function flipwait(){
+  Card.target.style.setProperty('--ga-scaling', '1');
+  Card.target.style.animation = 'none';
+  Card.target.style.animation = 'CardPaired 1s ease forwards';
+}, 1000)
+}
+  //
+  //Trap
+  //
+if(CardFind.Type === "Trap"){
+  trap.play();
+    if(Turn === PN1){
+      PlayerCheck();
+      if(PLAYERONE.Multiplier === true && PLAYERONE.Class !== "Pharaoh"){
+        PLAYERONE.mAmount = PLAYERONE.mAmount - CardFind.Value;
+        console.log("HALVING");
+        console.log(PLAYERONE.mAmount);
+      }
+      if(PLAYERONE.Divisor === true && PLAYERONE.Class !== "Pharaoh"){
+        PLAYERONE.dAmount = PLAYERONE.dAmount + CardFind.Value;
+        console.log("HALVING MORE");
+        console.log(PLAYERONE.dAmount);
+      }
+      if(PLAYERONE.Divisor === false && PLAYERONE.Multiplier !== true && PLAYERONE.Class !== "Pharaoh"){
+      PLAYERONE.Divisor = true;
+      PLAYERONE.dAmount = CardFind.Value;
+      console.log("HALVING");
+      console.log(PLAYERONE.dAmount);
+      }
+      if(PLAYERONE.Class === "Pharaoh"){
+        SentenceTwo.innerHTML = PN1 + " is immune to trap cards!";
+        STATUSNOTIFICATION();
+      }
+    PlayerCheck();
+  }
+    else if(Turn === PN2){
+      PlayerCheck();
+      if(PLAYERTWO.Multiplier === true && PLAYERTWO.Class !== "Pharaoh"){
+        PLAYERTWO.mAmount = PLAYERTWO.mAmount - CardFind.Value;
+        console.log("HALVING");
+        console.log(PLAYERTWO.mAmount);
+      }
+      if(PLAYERTWO.Divisor === true && PLAYERTWO.Class !== "Pharaoh"){
+        PLAYERTWO.dAmount = PLAYERTWO.dAmount + CardFind.Value;
+        console.log("HALVING MORE");
+        console.log(PLAYERTWO.dAmount);
+      }
+      if(PLAYERTWO.Divisor === false && PLAYERTWO.Multiplier !== true && PLAYERTWO.Class !== "Pharaoh"){
+      PLAYERTWO.Divisor = true;
+      PLAYERTWO.dAmount = CardFind.Value;
+      console.log("HALVING");
+      console.log(PLAYERTWO.dAmount);
+    }
+      if(PLAYERTWO.Class === "Pharaoh"){
+        SentenceTwo.innerHTML = PN2 + " is immune to trap cards!";
+        STATUSNOTIFICATION();
+      }
+    PlayerCheck();
+  }
+  CardFound++;
+  PlayerCheck();
+  console.log("Card Found: " + CardFound);
+  CheckState();
+  Card.target.src = CardFind.ImageSrc;
+  Card.target.removeEventListener('click', FlipCard); //REMOVE CLICK
+
+  Card.target.classList.toggle("active");
+  Card.target.style.animation = 'Flipping 1s ease forwards';
+  setTimeout(function flipwait(){
+  Card.target.style.setProperty('--ga-scaling', '1');
+  Card.target.style.animation = 'none';
+  Card.target.style.animation = 'CardPaired 1s ease forwards';
+}, 1000)
+}
+
+  if(FirstCard === undefined && CardFind.Type !== "Boost" && CardFind.Type !== "Trap" ){
+  FirstCard = CardFind.Name;
+  console.log(FirstCard);
+  SavedFirst = Card.target; //SAVE FIRST CARD
+  Card.target.removeEventListener('click', FlipCard); //REMOVE CLICK
+  Card.target.src = CardFind.ImageSrc;
+
+  Card.target.classList.toggle("active");
+  Card.target.style.animation = 'Flipping 1s ease forwards';
+  }
+  else if(FirstCard !== undefined && SecondCard === undefined && CardFind.Type !== "Boost" && CardFind.Type !== "Trap"){
+    SecondCard = CardFind.Name;
+  //Add Flip Animation (Change IMG)
+    ChosenCard = CardFind;
+    console.log("First Card: " + FirstCard + " | Second Card: " + SecondCard);
+    SavedSecond = Card.target //SAVE SECOND CARD
+    Card.target.removeEventListener('click', FlipCard); //REMOVE CLICK
+    Card.target.src = CardFind.ImageSrc;
+
+    Card.target.classList.toggle("active");
+    Card.target.style.animation = 'Flipping 1s ease forwards';
+
+    CheckCards();
+
+  }
+}
+
+
+function CheckCards(){
+  console.log(ChosenCard)
+
+  if(FirstCard === SecondCard){
+    CardValue = ChosenCard.Value;
+    CardType = ChosenCard.Type;
+    console.log("Pair Found");
+
+    setTimeout(function flipwait(){
+    SavedFirst.style.setProperty('--ga-scaling', '1');
+    SavedFirst.style.animation = 'none';
+    SavedFirst.style.animation = 'CardPaired 1s ease forwards';
+
+    SavedSecond.style.setProperty('--ga-scaling', '1');
+    SavedSecond.style.animation = 'none';
+    SavedSecond.style.animation = 'CardPaired 1s ease forwards';
+
+    CheckState();
+    PlayerCheck();
+    PairFound();
+  }, 1000)
+
+    CardFound = CardFound + 2;
+    console.log("Card Found: " + CardFound);
+
+  }else{
+      console.log("Not a Pair");
+      SavedFirst.addEventListener('click', FlipCard); //ADD BACK FLIPPABLE
+      SavedSecond.addEventListener('click', FlipCard); //ADD BACK FLIPPABLE
+
+      setTimeout(function waiting(){
+      SavedFirst.classList.toggle("active");
+      SavedSecond.classList.toggle("active");
+
+      PlayerCheck()
+      WrongCard();
+
+    }, 1000)
+  }
+}
+
+function WrongCard(){
+  console.log("Flipping back now");
+  //FLIPBACK ANIMATION
+
+  SavedFirst.style.animation = 'WrongPair 1s ease forwards';
+  SavedSecond.style.animation = 'WrongPair 1s ease forwards';
+
+  SavedFirst.src = "../src/media/img/webdesign/cardback.jpg";
+  SavedSecond.src = "../src/media/img/webdesign/cardback.jpg";
+  FirstCard = undefined;
+  SecondCard = undefined;
+  SavedFirst = undefined;
+  SavedSecond = undefined;
+  SwitchTurn();
+}
+
+const sound = new Audio('../PossibleAudio/Paar.mp3');
+function PairFound(){
+  sound.play();
+  let DMGBlocked = false;
+  let EffectOne = document.getElementById("EffectOne");
+  let EffectTwo = document.getElementById("EffectTwo");
+
+  if(Turn === PN1){
+
+    if(PLAYERTWO.Blocking === true){
+      if(PLAYERTWO.Blocking === true && CardType === "Damage"){
+      PLAYERTWO.Blocking = false;
+      EffectTwo.style.display = 'none';
+      CardValue = 0;
+      }
+      if(PLAYERTWO.Blocking === true && CardType === "Heal"){
+        let ExcessCheck2 = PLAYERONE.Health + CardValue;
+        if(ExcessCheck2 > PLAYERONE.MaxHealth){
+          DMGBlocked = true;
+          PLAYERTWO.Blocking = false;
+          EffectTwo.style.display = 'none';
+        }
+      }
+    }
+
+    console.log("Player one doing action now!");
+    if(PLAYERONE.Multiplier === true){
+      CardValue = Math.round(CardValue * PLAYERONE.mAmount);
+      console.log("After Boost: " + CardValue);
+    }
+    if(PLAYERONE.Divisor === true){
+      CardValue = Math.round(CardValue / PLAYERONE.dAmount);
+      console.log("AFTER DIVIDE: " + CardValue);
+    }
+    if(PLAYERONE.berserk === 2){
+      CardValue = Math.round(CardValue * PLAYERONE.berserk);
+      PLAYERONE.berserk = 0;
+      EffectOne.style.display = 'none';
+    }
+    if(CardType === "Damage"){
+      PLAYERTWO.Health = PLAYERTWO.Health - (CardValue + PLAYERONE.dmgAmount);
+      console.log("PLAYER ONE HEALTH: " + PLAYERONE.Health + " | " + "PLAYER TWO HEALTH : " + PLAYERTWO.Health);
+      PLAYERTWO.Multiplier = false;
+      PLAYERTWO.mAmount = 0;
+      console.log("PLAYER TWO Booster Nullified: " + PLAYERTWO.mAmount + "|" + PLAYERTWO.Multiplier);
+    }
+    if(CardType === "Heal"){
+    let ExcessCheck = PLAYERONE.Health + CardValue;
+      if(PLAYERONE.Health < PLAYERONE.MaxHealth && ExcessCheck <= PLAYERONE.MaxHealth){
+      PLAYERONE.Health = PLAYERONE.Health + CardValue;
+      console.log("AFTER HEALING: PLAYER ONE HEALTH: " + PLAYERONE.Health + " | " + "PLAYER TWO HEALTH : " + PLAYERTWO.Health);
+    }
+      if(ExcessCheck > PLAYERONE.MaxHealth){
+      PLAYERONE.Health = PLAYERONE.Health + CardValue;
+      console.log("AFTER Excess HEALING: PLAYER ONE HEALTH: " + PLAYERONE.Health + " | " + "PLAYER TWO HEALTH : " + PLAYERTWO.Health);
+      if(PLAYERONE.Health > PLAYERONE.MaxHealth){
+        CardValue = PLAYERONE.Health - PLAYERONE.MaxHealth;
+      }
+      console.log("Remaining Value: " + CardValue)
+      PLAYERONE.Health = PLAYERONE.MaxHealth;
+      if(DMGBlocked === false){
+        console.log("BLOCKED? " + DMGBlocked);
+      PLAYERTWO.Health = PLAYERTWO.Health - CardValue;
+      }
+      console.log("EXCESS HEAL: PLAYER ONE HEALTH: " + PLAYERONE.Health + " | " + "PLAYER TWO HEALTH : " + PLAYERTWO.Health);  
+    }
+    PLAYERTWO.Multiplier = false;
+    PLAYERTWO.mAmount = 0;
+    console.log("PLAYER TWO Booster Nullified: " + PLAYERTWO.mAmount + "|" + PLAYERTWO.Multiplier);
+  }
+
+    console.log(CardType + " | " + CardValue);
+    FirstCard = undefined;
+    SecondCard = undefined;
+    PLAYERONE.Multiplier = false;
+    PLAYERONE.Divisor = false;
+    PLAYERONE.mAmount = 0;
+    PLAYERONE.dAmount = 0;
+    PLAYERONE.Pairs++
+    console.log("p1 " + PLAYERONE.Pairs);
+    CheckState();
+    SwitchTurn();
+
+    setTimeout(() => {
+      if(PLAYERONE.Class === "Indian"){
+      if(PLAYERONE.Pairs >= 2){
+        let HealValue = 5;
+        let Checking = PLAYERONE.Health + HealValue;
+        if(Checking >= PLAYERONE.MaxHealth){
+          PLAYERONE.Health = PLAYERONE.MaxHealth;
+        }else{
+          PLAYERONE.Health = Checking;
+        }
+      SentenceTwo.innerHTML = PN1 + " healed for finding 2 pairs"
+      STATUSNOTIFICATION();
+      PLAYERONE.Pairs = 0;
+      CheckState();
+      }
+    }
+
+    if(PLAYERONE.Class === "Knight"){
+      if(PLAYERONE.Pairs >= 4){
+        EffectOne.style.display = 'block';
+        EffectOne.title = 'The next incoming damage from the opponent is blocked.';
+        PLAYERONE.Blocking = true;
+        SentenceTwo.innerHTML = PN1 + " is going to block the next attack";
+        STATUSNOTIFICATION();
+        PLAYERONE.Pairs = 0;
+      }
+    }
+
+    if(PLAYERONE.Class === "Viking"){
+      if(PLAYERONE.Pairs >= 1){
+        let RandomNumber = Math.round(Math.random() * 12);
+        let AbilityRNG = Math.round(Math.random() * 12);
+        console.log(RandomNumber + " " + AbilityRNG);
+
+        if(RandomNumber === AbilityRNG){
+          EffectOne.style.display = 'block'
+          EffectOne.title = 'The value of the next pair will be doubled.';
+          PLAYERONE.berserk = 2;
+          SentenceTwo.innerHTML = PN1 + " gained a Viking's Boost!";
+          STATUSNOTIFICATION();
+        }
+        PLAYERONE.Pairs = 0;
+      }
+    }
+
+    PlayerCheck();
+  }, 250);
+
+}
+  else if(Turn === PN2){
+
+    if(PLAYERONE.Blocking === true){
+      if(PLAYERONE.Blocking === true && CardType === "Damage"){
+      PLAYERONE.Blocking = false;
+      EffectOne.style.display = 'none';
+      CardValue = 0;
+      }
+      if(PLAYERONE.Blocking === true && CardType === "Heal"){
+        let ExcessCheck2 = PLAYERTWO.Health + CardValue;
+        if(ExcessCheck2 > PLAYERTWO.MaxHealth){
+          DMGBlocked = true;
+          PLAYERONE.Blocking = false;
+          EffectOne.style.display = 'none';
+        }
+      }
+    }
+
+    console.log("Player two doing action now!");
+    if(PLAYERTWO.Multiplier === true){
+      CardValue = Math.round(CardValue * PLAYERTWO.mAmount);
+    }
+    if(PLAYERTWO.Divisor === true){
+      CardValue = Math.round(CardValue / PLAYERTWO.dAmount);
+    }
+    if(PLAYERTWO.berserk === 2){
+      CardValue = Math.round(CardValue * PLAYERTWO.berserk);
+      PLAYERTWO.berserk = 0;
+      EffectTwo.style.display = 'none';
+    }
+    if(CardType === "Damage"){
+      PLAYERONE.Health = PLAYERONE.Health - (CardValue + PLAYERTWO.dmgAmount);
+      console.log("PLAYER ONE HEALTH: " + PLAYERONE.Health + " | " + "PLAYER TWO HEALTH : " + PLAYERTWO.Health);
+      PLAYERONE.Multiplier = false;
+      PLAYERONE.mAmount = 0;
+      console.log("PLAYER ONE Booster Nullified: " + PLAYERONE.mAmount + "|" + PLAYERONE.Multiplier);
+    }
+    if(CardType === "Heal"){
+    let ExcessCheck = PLAYERTWO.Health + CardValue;
+      if(PLAYERTWO.Health < PLAYERTWO.MaxHealth && ExcessCheck <= PLAYERTWO.MaxHealth){
+      PLAYERTWO.Health = PLAYERTWO.Health + CardValue;
+      console.log("AFTER HEALING: PLAYER ONE HEALTH: " + PLAYERTWO.Health + " | " + "PLAYER TWO HEALTH : " + PLAYERONE.Health);
+    }
+      if(ExcessCheck > PLAYERTWO.MaxHealth){
+      PLAYERTWO.Health = PLAYERTWO.Health + CardValue;
+      console.log("AFTER Excess HEALING: PLAYER ONE HEALTH: " + PLAYERTWO.Health + " | " + "PLAYER TWO HEALTH : " + PLAYERONE.Health);
+      if(PLAYERTWO.Health > PLAYERTWO.MaxHealth){
+        CardValue = PLAYERTWO.Health - PLAYERTWO.MaxHealth;
+      }
+      console.log("Remaining Value: " + CardValue);
+      PLAYERTWO.Health = PLAYERTWO.MaxHealth;
+      if(DMGBlocked === false){
+        console.log("BLocked? " + DMGBlocked);
+      PLAYERONE.Health = PLAYERONE.Health - CardValue;
+      }
+      console.log("EXCESS HEAL: PLAYER ONE HEALTH: " + PLAYERTWO.Health + " | " + "PLAYER TWO HEALTH : " + PLAYERONE.Health);  
+    }
+    PLAYERONE.Multiplier = false;
+    PLAYERONE.mAmount = 0;
+    console.log("PLAYER ONE Booster Nullified: " + PLAYERTWO.mAmount + "|" + PLAYERTWO.Multiplier);
+  }
+    console.log(CardType + " | " + CardValue);
+    FirstCard = undefined;
+    SecondCard = undefined;
+    PLAYERTWO.Multiplier = false;
+    PLAYERTWO.Divisor = false;
+    PLAYERTWO.mAmount = 0;
+    PLAYERTWO.dAmount = 0;
+    PLAYERTWO.Pairs++
+    console.log("p2 " + PLAYERTWO.Pairs)
+    CheckState();
+    SwitchTurn();
+
+        setTimeout(() => {
+      if(PLAYERTWO.Class === "Indian"){
+      if(PLAYERTWO.Pairs >= 2){
+        let HealValue = 5;
+        let Checking = PLAYERTWO.Health + HealValue;
+        if(Checking >= PLAYERTWO.MaxHealth){
+          PLAYERTWO.Health = PLAYERTWO.MaxHealth;
+        }else{
+          PLAYERTWO.Health = Checking;
+        }
+      PLAYERTWO.Pairs = 0;
+      SentenceTwo.innerHTML = PN2 + " healed for finding 2 pairs"
+      STATUSNOTIFICATION();
+      CheckState();
+      }
+    }
+
+      if(PLAYERTWO.Class === "Knight"){
+      if(PLAYERTWO.Pairs >= 4){
+        EffectTwo.style.display = 'block'
+        EffectTwo.title = 'The next incoming damage from the opponent is blocked.';
+        PLAYERTWO.Blocking = true;
+        SentenceTwo.innerHTML = PN2 + " is going to block the next attack";
+        STATUSNOTIFICATION();
+        PLAYERTWO.Pairs = 0;
+      }
+    }
+
+      if(PLAYERTWO.Class === "Viking"){
+        if(PLAYERTWO.Pairs >= 1){
+          let RandomNumber = Math.round(Math.random() * 12);
+          let AbilityRNG = Math.round(Math.random() * 12);
+          console.log(RandomNumber + " " + AbilityRNG);
+
+          if(RandomNumber === AbilityRNG){
+            EffectTwo.style.display = 'block'
+            EffectTwo.title = 'The value of the next pair will be doubled.';
+            PLAYERTWO.berserk = 2;
+            SentenceTwo.innerHTML = PN1 + " gained a Viking's Boost!";
+            STATUSNOTIFICATION();
+          }
+          PLAYERTWO.Pairs = 0;
+        }
+      }
+
+      PlayerCheck();
+  }, 250);
+
+}
+PlayerCheck();
+}
+
+function SwitchTurn(){
+  if(Turn === PN1 && PLAYERONE.Class !== 'Generalin'){
+    Turn = PN2;
+    console.log("Player Two Turn");
+    console.log(Turn);
+  }
+  else if(Turn === PN2 && PLAYERTWO.Class !== 'Generalin'){
+    Turn = PN1;
+    console.log("Player One Turn");
+    console.log(Turn);
+  }
+
+  else if(Turn === PN1 && PLAYERONE.Class === 'Generalin'){
+    if(PLAYERONE.Pairs === 3){
+      Turn = PN1;
+      SentenceTwo.innerHTML = PN1 + " is picking again!";
+      STATUSNOTIFICATION();
+      PLAYERONE.Pairs = 0;
+    }else{
+      Turn = PN2;
+    }
+  }
+  else if(Turn === PN2 && PLAYERTWO.Class === 'Generalin'){
+    if(PLAYERTWO.Pairs === 3){
+      Turn = PN2;
+      SentenceTwo.innerHTML = PN2 + " is picking again!";
+      STATUSNOTIFICATION();
+      PLAYERTWO.Pairs = 0;
+    }else{
+      Turn = PN1;
+    }
+  }
+  Sentence.innerHTML = Turn + " is picking now!"
+  SHORTNOTIFICATION();
+  CheckTurn()
+}
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*
+Start of turn.
+
+We need double the amount of NORMAL
+
+Include the Booster and Trapper card in that Double Amount
+
+Shuffle those Cards
+
+Create slot for 40 Cards
+
+Insert card on those slots.
+*/
+
+var ValidCards = new Array();
+var CardID;
+var CardFound;
+var Rounds;
+const GameField = document.getElementById("GameArea");
+Turn = PN1;
+
+
+function CardDoubler(){
+CardID = 0;
+CardFound = 0;
+GameField.style.animation = 'none';
+
+ValidCards = [];
+
+ValidCards.push(...NORMAL); //PUSH A SHUFFLED NORMAL CARDS
+ValidCards.push(...NORMAL); //DOUBLE THE NORMAL CARDS
+ValidCards.push(...BOOSTER, ...TRAPPER); //PUSH BOOST AND TRAP CARDS CARDS
+
+shuffle(ValidCards); //SHUFFLE THE CARDS!!!
+shuffle(ValidCards); //SHUFFLE THE CARDS!!!
+shuffle(ValidCards); //SHUFFLE THE CARDS!!!
+shuffle(ValidCards); //SHUFFLE THE CARDS!!!
+
+CardCreation();
+FirstCard = undefined;
+SecondCard = undefined;
+SavedFirst = undefined;
+SavedSecond = undefined;
+PlayerCheck();
+}
+
+function shuffle(array){
+    for (let i = array.length - 1; i > 0; i--) {
+        const JoinCard = Math.floor(Math.random() * (i + 1));
+        const temp = array[i];
+        array[i] = array[JoinCard];
+        array[JoinCard] = temp;
+    }
+    return array;
+};
+
+function CheckTurn(){
+      if(Turn === PN1){
+    document.getElementById("GameCharacterTwo").style.animation = 'none';
+    //document.getElementById("P2Turn").style.animation = 'none';
+    document.getElementById("GameCharacterOne").style.animation ='PlayerOneTurn 2s ease-in-out alternate infinite none';
+    //document.getElementById("P1Turn").style.animation = 'PlayerTurn 2s ease-in-out alternate infinite none';
+    //document.getElementById("P1Turn").innerHTML = PN1;
+    }
+    if (Turn === PN2){
+    document.getElementById("GameCharacterOne").style.animation = 'none';
+    //document.getElementById("P1Turn").style.animation = 'none';
+    document.getElementById("GameCharacterTwo").style.animation ='PlayerTwoTurn 2s ease-in-out alternate infinite none';
+    //document.getElementById("P2Turn").style.animation = 'PlayerTurn 2s ease-in-out alternate infinite none';
+    //document.getElementById("P2Turn").innerHTML = PN2;
+    }
+}
+
+function CardCreation(){
+  GameField.innerHTML="";
+  console.log(GameField);
+        for(let CardImages of ValidCards) {
+          let GameCards = document.createElement('img');
+          GameCards.src = '../src/media/img/webdesign/cardback.jpg';
+          GameCards.name = CardImages;
+          //GameCards.title = CardImages.Name; //CHEAT
+          GameCards.id = CardID++;
+          
+          GameCards.style.animation = 'CardAppearance 1s ease forwards';
+
+
+          GameCards.addEventListener('click', FlipCard);
+          GameField.appendChild(GameCards);
+        }
+        console.log(ValidCards);
+        console.log(NORMAL);
+        console.log(BOOSTER);
+        console.log(TRAPPER);
+        CheckState();
+        CheckTurn();
+        GameField.style.setProperty('--ga-scaling', '1.10,1.10');
+        GameField.style.setProperty('--ga-cursor', 'pointer');
+      }
+
+      function JOIN(){
+    var confirmation = confirm("Are you sure you want to go back to the Main Menu?");
+    
+    if (confirmation) {
+        document.querySelectorAll('*').forEach(function(node) {
+            node.style.animation = 'none';
+            node.style.animation = 'joinDisappear 2s ease forwards'
+        });
+        setTimeout(() => {
+            location.href = "../Main.html";
+        }, 700);
+    } else {
+        // If the user clicks "Cancel" in the confirmation message, do nothing
+        return;
+    }
+}
+
+
+  function SHORTNOTIFICATION(){
+    let NotificationWindow = document.getElementById("Notification");
+    let OrigWidth = NotificationWindow.style.width;
+    let OrigHeight = NotificationWindow.style.height;
+    NotificationWindow.style.width = 25 + "%";
+    NotificationWindow.style.height = "auto";
+    NotificationWindow.style.opacity = 0;
+    NotificationWindow.style.display = "block";
+    NotificationWindow.style.animation = "ShortNotif 2s ease-in-out"
+
+    setTimeout(()=>{
+      NotificationWindow.style.display = "none";
+      NotificationWindow.style.width = OrigWidth;
+      NotificationWindow.style.height = OrigHeight;
+    }, 2000)
+  }
+
+  function STATUSNOTIFICATION(){
+    let NotificationWindow = document.getElementById("NotificationTwo");
+    NotificationWindow.styl
+    NotificationWindow.style.opacity = 0;
+    NotificationWindow.style.display = "block";
+    NotificationWindow.style.animation = "ShortNotif 2s ease-in-out"
+
+    setTimeout(()=>{
+      NotificationWindow.style.display = "none";
+    }, 2000)    
+  }
+
+  function NOTIFICATION(){
+    let NotificationWindow = document.getElementById("Notification");
+
+    NotificationWindow.style.top = 55 + "%";
+    NotificationWindow.style.display = "block";
+    NotificationWindow.style.animation = "appear 1.5s ease forwards"
+    document.getElementById("GameCharacterOne").style.animation = 'none';
+    //document.getElementById("P1Turn").style.animation = 'none';
+    document.getElementById("GameCharacterTwo").style.animation = 'none';
+    //document.getElementById("P2Turn").style.animation = 'none';
+
+    setTimeout(() =>{
+    MainMenuButton.style.display = "block";
+    ContinueButton.style.display = "block";
+  }, 3000);
+  }
+
+  function CONTINUE(){
+    let NotificationWindow = document.getElementById("Notification");
+
+    if(PLAYERONE.Class === "Pharaoh"){
+      PLAYERONE.Resurrection = 1;
+    }
+
+    if(PLAYERTWO.Class === "Pharaoh"){
+      PLAYERTWO.Resurrection = 1;
+    }
+
+    EffectOne.style.display = 'none';
+    EffectTwo.style.display = 'none';
+
+    CardDoubler();
+    NotificationWindow.style.animation = "disappear 2s ease forwards"
+
+    setTimeout(()=>{
+      NotificationWindow.style.display = "none";
+      MainMenuButton.style.display = "none";
+      ContinueButton.style.display = "none";
+      NotificationWindow.style.top = 35 + "%";
+    }, 2500)
+  }
+  //SHORTNOTIFICATION();
+  //NOTIFICATION();
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+  function StartUp(){
+    P1Name.innerHTML = PN1;
+    P2Name.innerHTML = PN2;
+    document.getElementById("GameCharacterOne").src = PN1Char;
+    document.getElementById("GameCharacterTwo").src = PN2Char;
+    window.ondragstart = function() { return false; } 
+    Assign();
+  }
+
+  function Assign(){
+  var P1Class = sessionStorage.getItem('First Class');
+  var P2Class = sessionStorage.getItem('Second Class');
+
+  if(P1Class === 'Samurai'){
+    PLAYERONE.MaxHealth = 90;
+    PLAYERONE.Health = 90;
+    PLAYERONE.dmgAmount = 3;
+  }
+  if(P1Class === 'Generalin'){
+    PLAYERONE.MaxHealth = 100;
+    PLAYERONE.Health = 100;
+  }
+  if(P1Class === 'Indian'){
+    PLAYERONE.MaxHealth = 100;
+    PLAYERONE.Health = 100;
+  }
+  if(P1Class === 'Knight'){
+    PLAYERONE.MaxHealth = 110;
+    PLAYERONE.Health = 110;
+  }
+  if(P1Class === 'Pharaoh'){
+    PLAYERONE.MaxHealth = 100;
+    PLAYERONE.Health = 100;
+    PLAYERONE.Resurrection = 1;
+    PLAYERONE.ResurrectableClass = true;
+  }
+  if(P1Class === 'Viking'){
+    PLAYERONE.MaxHealth = 120;
+    PLAYERONE.Health = 120;
+  }
+
+  if(P2Class === 'Samurai'){
+    PLAYERTWO.MaxHealth = 90;
+    PLAYERTWO.Health = 90;
+    PLAYERTWO.dmgAmount = 3;
+  }
+  if(P2Class === 'Generalin'){
+    PLAYERTWO.MaxHealth = 100;
+    PLAYERTWO.Health = 100;
+  }
+  if(P2Class === 'Indian'){
+    PLAYERTWO.MaxHealth = 100;
+    PLAYERTWO.Health = 100;
+  }
+  if(P2Class === 'Knight'){
+    PLAYERTWO.MaxHealth = 110;
+    PLAYERTWO.Health = 110;
+  }
+  if(P2Class === 'Pharaoh'){
+    PLAYERTWO.MaxHealth = 100;
+    PLAYERTWO.Health = 100;
+    PLAYERTWO.Resurrection = 1;
+    PLAYERTWO.ResurrectableClass = true;
+  }
+  if(P2Class === 'Viking'){
+    PLAYERTWO.MaxHealth = 120;
+    PLAYERTWO.Health = 120;
+  }
+  PLAYERONE.Class = P1Class;
+  PLAYERTWO.Class = P2Class;
+  CardDoubler();
+  }
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+let audio = document.getElementById("audio");
+audio.volume="0.5";
+let time = document.querySelector(".time");
+let btnPlay = document.querySelector(".play");
+let btnPause = document.querySelector(".pause");
+let btnPrev = document.querySelector(".prev");
+let btnNext = document.querySelector(".next");
+let volumeSlider = document.querySelector(".volume");
+volumeSlider.value = 0.5;
+
+
+let playlist = [  'FF7.mp3',  'Inuyasha.mp3',  'Zeke.mp3',  'DearlyBeloved.mp3',  'Aot.mp3',  'SadSong.mp3',  'Lewis.mp3'];
+
+let track = 0;
+
+function switchTrack(trackIndex) {
+  audio.src = '../PossibleAudio/Songs/' + playlist[trackIndex];
+  audio.currentTime = 0;
+  audio.play();
+}
+
+function updateTrackTime() {
+  let trackTime = Math.round(audio.currentTime);
+  let trackLength = Math.round(audio.duration);
+  time.style.width = (trackTime * 100) / trackLength + '%';
+  if (trackTime == trackLength && track < 1) {
+    track++;
+    switchTrack(track);
+  } else if (trackTime == trackLength && track >= 1) {
+    track = 0;
+    switchTrack(track);
+  }
+}
+
+let audioInterval;
+
+btnPlay.addEventListener("click", function() {
+  audio.play();
+  audioInterval = setInterval(updateTrackTime, 10);
+});
+
+btnPause.addEventListener("click", function() {
+  audio.pause();
+  clearInterval(audioInterval);
+});
+
+btnPrev.addEventListener("click", function() {
+  if (track > 0) {
+    track--;
+  } else {
+    track = playlist.length - 1;
+  }
+  switchTrack(track);
+});
+
+
+
+btnNext.addEventListener("click", function() {
+  if (track < playlist.length - 1) {
+    track++;
+  } else {
+    track = 0;
+  }
+  switchTrack(track);
+});
+
+
+volumeSlider.addEventListener("input", function() {
+  audio.volume = volumeSlider.value;
+});
+
+
+</script>
+
+</body>
+</main>
+</html>
